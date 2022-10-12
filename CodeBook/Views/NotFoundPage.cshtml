@@ -1,0 +1,25 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+
+@{
+    Layout = "_CodeBookInnerTemplate.cshtml";
+
+    var PXH = new PropertyExceptionHandler();
+    var Page = Umbraco.AssignedContentItem; 
+    
+    }
+        
+
+    
+  
+    
+    <section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                  @Html.Raw(PXH.GetTextValue(Page, "notFound"))
+               
+            </div>
+        </div>
+    </div>
+</section>

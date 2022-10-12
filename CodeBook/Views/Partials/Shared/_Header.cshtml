@@ -1,0 +1,109 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+@{
+    var Root = Model.Root();
+    PropertyExceptionHandler PXH = new PropertyExceptionHandler();
+
+    var LogoURL = PXH.GetImageURL(Root, "mainLogo");
+    //var TopMenu = PXH.GetElementsArray(Root, "topMenu");
+    var TopMenu = PXH.GetLinkArray(Root, "topMenu");
+    //var NavBarMenu = PXH.GetElementsArray(Root, "navBarMenu");
+    var NavBarMenu = PXH.GetLinkArray(Root, "navBarMenu");
+    var Active = "";
+
+    var Call = PXH.GetLink(Root, "call");
+    var _Call = "Call";
+
+    //var SocialMedia = PXH.GetElementsArray(Root, "socialMedia");
+    var SocialMedia = PXH.GetElementsArray(Root, "socialMedia");
+    var CurrentDT = Umbraco.AssignedContentItem;
+    var Languages = CurrentDT.Cultures;
+
+}
+<header class="fixed-top header">
+    <!-- top header -->
+    <div class="top-header py-2 bg-white">
+        <div class="container">
+            <div class="row no-gutters">
+                <div class="col-lg-4 text-center text-lg-left">
+                    <a class="text-color mr-3" href="@Call.Url"><strong>@_Call</strong> @Call.Name</a>
+                    <ul class="list-inline d-inline">
+                        @{
+                            var Link = PXH.GetLink(SocialMedia[0], "linkUrl", "#", "");
+                            var Icon = "";
+                        }
+                        @for (int i = 0; i < SocialMedia.Length; i++)
+                        {
+                            Link = PXH.GetLink(SocialMedia[i], "linkUrl", "#", "");
+                            Icon = PXH.GetTextValue(SocialMedia[i], "itemIcon");
+                            <li class="list-inline-item mx-0">
+                                <a class="d-inline-block p-2 text-color"
+                                   target="@Link.Target"
+                                   href="@Link.Url">
+                                    <i class="@Icon"></i>
+                                </a>
+                            </li>
+
+                        }
+
+                    </ul>
+                </div>
+                <div class="col-lg-8 text-center text-lg-right">
+                    <ul class="list-inline">
+                        @for (int i = 0; i < TopMenu.Length; i++)
+                        {
+                            //var Link = PXH.GetLink(TopMenu[i], "linkURL", "#", "");
+                            <li class="list-inline-item">
+                                <a class="text-uppercase text-color p-sm-2 py-2 px-0 d-inline-block"
+                                   target="@TopMenu[i].Target"
+                                   
+                                   href="@TopMenu[i].Url">
+                                    @TopMenu[i].Name
+                                </a>
+                            </li>
+
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- navbar -->
+    <div class="navigation w-100">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-dark p-0">
+                <a class="navbar-brand"
+                   href="@Root.Url()">
+                    <img src="@LogoURL"
+                         alt="logo">
+                </a>
+                <button class="navbar-toggler rounded-0"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#navigation"
+                        aria-controls="navigation"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse"
+                     id="navigation">
+                    <ul class="navbar-nav ml-auto text-center">
+
+                        @for (int i = 0; i < NavBarMenu.Length; i++)
+                        {
+                            //var Link = PXH.GetLink(NavBarMenu[i], "linkUrl", "#");
+                            Active = CurrentDT.Url() == NavBarMenu[i].Url ? "active" : "";
+
+                            <li class="nav-item @Active">
+                                <a class="nav-link" href="@NavBarMenu[i].Url">@NavBarMenu[i].Name</a>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>

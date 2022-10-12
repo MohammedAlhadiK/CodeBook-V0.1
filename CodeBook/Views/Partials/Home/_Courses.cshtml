@@ -1,0 +1,51 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+@{
+
+
+    var PXH = new PropertyExceptionHandler();
+    var CurrentCourse = Umbraco.AssignedContentItem;
+    var RelatedCourses = CurrentCourse.Value<IEnumerable<IPublishedContent>>("relatedCourses").ToArray();
+
+
+}
+
+<!-- related course -->
+<section class="section pt-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="section-title">Related Course</h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+
+            @for (int i = 0; i < RelatedCourses.Length; i++)
+            {
+
+                <!-- course item -->
+                <div class="col-lg-4 col-sm-6 mb-5">
+                    <div class="card p-0 border-primary rounded-0 hover-shadow">
+                        <img class="card-img-top rounded-0" src="@PXH.GetImageURL(RelatedCourses[i],"courseImage")" alt="course thumb">
+                        <div class="card-body">
+                            <ul class="list-inline mb-2">
+                                <li class="list-inline-item"><i class="ti-calendar mr-1 text-color"></i>@RelatedCourses[i].CreateDate.ToShortDateString()</li>
+                                <li class="list-inline-item"><a class="text-color" href="@RelatedCourses[i].Url()">Humanities</a></li>
+                            </ul>
+                            <a href="@RelatedCourses[i].Url()">
+                                <h4 class="card-title">@RelatedCourses[i].Name</h4>
+                            </a>
+                            <p class="card-text mb-4">
+                                @PXH.GetTextValue(RelatedCourses[i], "about").StripHtml().Substring(0, 190) ...
+                            </p>
+                            <a href="@RelatedCourses[i].Url()" class="btn btn-primary btn-sm">Apply now</a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+        </div>
+    </div>
+</section>
+<!-- /related course -->

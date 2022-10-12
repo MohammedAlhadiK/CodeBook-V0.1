@@ -1,0 +1,96 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+@{
+    Layout = "_CodeBookInnerTemplate.cshtml";
+
+    var PXH = new PropertyExceptionHandler();
+    var CurrentTeacher = Umbraco.AssignedContentItem;
+    var TeacherName = CurrentTeacher.Name;
+    var Description = PXH.GetTextValue(CurrentTeacher, "description").StripHtml();
+    var Specialization = PXH.GetTextValue(CurrentTeacher, "specialization");
+    var SocialMediaContacts = PXH.GetElementsArray(CurrentTeacher, "socialMediaContacts");
+    var ProfilePicture = PXH.GetImageURL(CurrentTeacher, "profilePicture");
+    var ActivitiesAndInterests = CurrentTeacher.Value<IEnumerable<string>>("activitiesAndInterests").ToArray();
+    var Biography = PXH.GetTextValue(CurrentTeacher, "biography").StripHtml();
+    var RelatedCourses = CurrentTeacher.Value<IEnumerable<IPublishedContent>>("relatedCourses").ToArray();
+
+}
+
+<!-- teacher details -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 mb-5">
+                <img class="img-fluid w-100" src="@ProfilePicture" alt="teacher">
+            </div>
+            <div class="col-md-6 mb-5">
+                <h3>@TeacherName</h3>
+                <h6 class="text-color">@Specialization</h6>
+                <p class="mb-5">
+                    @Description
+                </p>
+                <div class="row">
+                    <div class="col-md-6 mb-5 mb-md-0">
+                        <h4 class="mb-4">CONTACT INFO:</h4>
+                        <ul class="list-unstyled">
+                            @for (int i = 0; i < SocialMediaContacts.Length; i++)
+                            {
+                                <li class="mb-3"><a class="text-color" href="#"><i class="ti-facebook mr-2"></i>john Doe</a></li>
+
+                            }
+
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="mb-4">SUMMARY OF ACTIVITIES/INTERESTS</h4>
+                        <ul class="list-unstyled">
+
+                            @for (int i = 0; i < ActivitiesAndInterests.Length; i++)
+                            {
+                                <li class="mb-3">@ActivitiesAndInterests[i]</li>
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <h4 class="mb-4">BIOGRAPHY</h4>
+                <p class="mb-5">
+                    @Biography
+                </p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h4 class="mb-4">COURSES</h4>
+            </div>
+            <!-- course item -->
+            @for (int i = 0; i < RelatedCourses.Length; i++)
+            {
+
+                <!-- course item -->
+                <div class="col-lg-4 col-sm-6 mb-5">
+                    <div class="card p-0 border-primary rounded-0 hover-shadow">
+                        <img class="card-img-top rounded-0" src="@PXH.GetImageURL(RelatedCourses[i],"courseImage")" alt="course thumb">
+                        <div class="card-body">
+                            <ul class="list-inline mb-2">
+                                <li class="list-inline-item"><i class="ti-calendar mr-1 text-color"></i>@RelatedCourses[i].CreateDate.ToShortDateString()</li>
+                                <li class="list-inline-item"><a class="text-color" href="@RelatedCourses[i].Url()">Humanities</a></li>
+                            </ul>
+                            <a href="@RelatedCourses[i].Url()">
+                                <h4 class="card-title">@RelatedCourses[i].Name</h4>
+                            </a>
+                            <p class="card-text mb-4">
+                                @PXH.GetTextValue(RelatedCourses[i], "about").StripHtml().Substring(0, 190) ...
+                            </p>
+                            <a href="@RelatedCourses[i].Url()" class="btn btn-primary btn-sm">Apply now</a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>
+<!-- /teacher details -->

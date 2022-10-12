@@ -1,0 +1,32 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+@{
+    var Root = Model.Root();
+    var AboutPage = Root.ChildrenOfType("About").FirstOrDefault();
+    var PXH = new PropertyExceptionHandler();
+
+    var SectionTitleSuccessStories = PXH.GetTextValue(AboutPage, "sTSuccessStories");
+    var SuccessStories = PXH.GetTextValue(AboutPage, "successStories");
+    var StoryVideoLink = PXH.GetLink(AboutPage, "storyVideoLink");
+    var SectionBackground = PXH.GetImageURL(AboutPage, "sectionBackground");
+
+}
+<!-- success story -->
+<section class="section bg-cover" data-background="@SectionBackground">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-sm-4 position-relative success-video">
+                <a class="play-btn venobox" href="@StoryVideoLink.Url" data-vbtype="video">
+                    <i class="ti-control-play"></i>
+                </a>
+            </div>
+            <div class="col-lg-6 col-sm-8">
+                <div class="bg-white p-5">
+                    <h2 class="section-title">@SectionTitleSuccessStories</h2>
+                    @Html.Raw(SuccessStories)
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /success story -->

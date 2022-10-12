@@ -1,0 +1,89 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+@using CodeBook.Models
+@using CodeBook.Models.ViewModels
+
+@{
+    Layout = "_CodeBookInnerTemplate.cshtml";
+}
+@{
+
+    var CurrentDT = Umbraco.AssignedContentItem;
+    PropertyExceptionHandler PXH = new PropertyExceptionHandler();
+    var CurrentDT_Title = PXH.GetTextValue(CurrentDT, "title");
+    var Description = PXH.GetTextValue(CurrentDT, "pageDescription").StripHtml();
+    var PhoneNumber = PXH.GetTextValue(CurrentDT, "phoneNumber");
+    var Email = PXH.GetTextValue(CurrentDT, "email");
+    var Address = PXH.GetTextValue(CurrentDT, "address");
+    var Location = PXH.GetLink(CurrentDT, "location", "");
+    var FormModel = new GenericVM<ContactUs>() { CurrentLanguage = CurrentDT.GetCultureFromDomains(), ParentID = CurrentDT.Key.ToString() };
+
+}
+
+<!-- contact -->
+<section class="section bg-gray">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="section-title">@CurrentDT_Title</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-7 mb-4 mb-lg-0">
+                @Html.Partial("Partials/ContactUs/_ContactUsForm", FormModel)
+            </div>
+            <div class="col-lg-5">
+                <p class="mb-5">@Description</p>
+                <a href="tel:@PhoneNumber" class="text-color h5 d-block">@PhoneNumber</a>
+                <a href="mailto:yourmail@email.com" class="mb-5 text-color h5 d-block">@Email</a>
+                <p>@Address</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /contact -->
+<!-- gmap -->
+<section class="section pt-0">
+    <!-- Google Map -->
+
+    <div>
+        <div class="mapouter">
+            <div class="gmap_canvas">
+                <iframe width="100%"
+                        height="500"
+                        id="gmap_canvas"
+                        src="@Location.Url"
+                        frameborder="0"
+                        scrolling="no"
+                        marginheight="0"
+                        marginwidth="0">
+                </iframe>
+                <a href="https://123movies-to.org"></a><br>
+
+
+
+                <style>
+                    .mapouter {
+                        position: relative;
+                        text-align: right;
+                        height: 500px;
+                        width: 100%;
+                    }
+                </style><a href="https://www.embedgooglemap.net"></a>
+                <style>
+                    .gmap_canvas {
+                        overflow: hidden;
+                        background: none !important;
+                        height: 500px;
+                        width: 100%;
+                    }
+                </style>
+            </div>
+        </div>
+
+    </div>
+
+
+
+</section>
+<!-- /gmap -->

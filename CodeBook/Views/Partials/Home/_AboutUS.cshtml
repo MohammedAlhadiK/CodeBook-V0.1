@@ -1,0 +1,31 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+@{
+
+    var PXH = new PropertyExceptionHandler();
+    var Home = Umbraco.AssignedContentItem;
+
+
+
+    var AboutOurJourneySectionTitle = PXH.GetTextValue(Home, "aboutUsST");
+    var AboutUSDescreption = PXH.GetTextValue(Home, "aboutUSDes");
+    var AboutUsPageLink = PXH.GetLink(Home, "aboutUsPage");
+    var AboutUSImage = PXH.GetImageURL(Home, "aboutUSImage");
+
+
+
+}
+<section class="section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 order-2 order-md-1">
+                <h2 class="section-title">@AboutOurJourneySectionTitle</h2>
+                @Html.Raw(AboutUSDescreption)
+                <a href="@AboutUsPageLink.Url" class="btn btn-primary-outline">Learn more</a>
+            </div>
+            <div class="col-md-6 order-1 order-md-2 mb-4 mb-md-0">
+                <img class="img-fluid w-100" src="@AboutUSImage" alt="about image">
+            </div>
+        </div>
+    </div>
+</section>

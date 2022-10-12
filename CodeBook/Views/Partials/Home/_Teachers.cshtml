@@ -1,0 +1,59 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+
+@{
+
+
+    var HomePage = Umbraco.AssignedContentItem;
+    var PXH = new PropertyExceptionHandler();
+    var OurTeachersTitle = PXH.GetTextValue(HomePage, "ourTeachersTitle");
+    var OurTeachers = HomePage.Value<IEnumerable<IPublishedContent>>("topTeachers").ToArray();
+    
+
+}
+<!-- teachers -->
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h2 class="section-title">@OurTeachersTitle</h2>
+            </div>
+            <!-- teacher -->
+            @for (int i = 0; i < OurTeachers.Length; i++)
+            {
+                <div class="col-lg-4 col-sm-6 mb-5 mb-lg-0">
+                    <div class="card border-0 rounded-0 hover-shadow">
+                        <img class="card-img-top rounded-0" src="@PXH.GetImageURL(OurTeachers[i],"profilePicture")" alt="teacher">
+                        <div class="card-body">
+                            <a href="@OurTeachers[i].Url()">
+                                <h4 class="card-title">@OurTeachers[i].Name</h4>
+                            </a>
+                            <div class="d-flex justify-content-between">
+                                <span>@PXH.GetTextValue(OurTeachers[i], "specialization")</span>
+                                <ul class="list-inline">
+                                    @{
+                                        var TeacherSocialMediaContact = PXH.GetElementsArray(OurTeachers[i], "socialMediaContacts");
+                                    }
+                                    @for (int j = 0; j < TeacherSocialMediaContact.Length; j++)
+                                    {
+                                        var TeacherSocialMediaContactLink = PXH.GetLink(TeacherSocialMediaContact[j], "linkURL");
+                                        <li class="list-inline-item">
+                                            <a class="text-color"
+                                               href="@TeacherSocialMediaContactLink.Url">
+                                                <i class="@TeacherSocialMediaContactLink.Name">
+                                                </i>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+    </div>
+</section>
+<!-- /teachers -->

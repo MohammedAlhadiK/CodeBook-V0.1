@@ -1,0 +1,135 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+
+@{
+    Layout = "_CodeBookInnerTemplate.cshtml";
+
+    var AboutPage = Umbraco.AssignedContentItem;
+    var PXH = new PropertyExceptionHandler();
+    var AboutImage = PXH.GetImageURL(AboutPage, "aboutImage");
+    var AboutOurJourneySectionTitle = PXH.GetTextValue(AboutPage, "sectionTitle");
+    var AboutOurJourney = PXH.GetTextValue(AboutPage, "aboutOurJourney");
+    var SectionTitleSuccessStories = PXH.GetTextValue(AboutPage, "sTSuccessStories");
+    var SuccessStories = PXH.GetTextValue(AboutPage, "successStories");
+    var StoryVideoLink = PXH.GetLink(AboutPage, "storyVideoLink");
+    var SectionBackground = PXH.GetImageURL(AboutPage, "sectionBackground");
+
+    var OurTeachersTitle = PXH.GetTextValue(AboutPage, "ourTeachersTitle");
+    var OurTeachers = AboutPage.Value<IEnumerable<IPublishedContent>>("ourTeachers").ToArray();
+
+}
+
+<!-- about -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <img class="img-fluid w-100 mb-4" src="@AboutImage" alt="about image">
+                <h2 class="section-title">@AboutOurJourneySectionTitle</h2>
+                @Html.Raw(AboutOurJourney)
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /about -->
+<!-- funfacts -->
+<section class="section-sm bg-primary">
+    <div class="container">
+        <div class="row">
+            <!-- funfacts item -->
+            <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+                <div class="text-center">
+                    <h2 class="count text-white" data-count="60">0</h2>
+                    <h5 class="text-white">TEACHERS</h5>
+                </div>
+            </div>
+            <!-- funfacts item -->
+            <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+                <div class="text-center">
+                    <h2 class="count text-white" data-count="50">0</h2>
+                    <h5 class="text-white">COURSES</h5>
+                </div>
+            </div>
+            <!-- funfacts item -->
+            <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+                <div class="text-center">
+                    <h2 class="count text-white" data-count="1000">0</h2>
+                    <h5 class="text-white">STUDENTS</h5>
+                </div>
+            </div>
+            <!-- funfacts item -->
+            <div class="col-md-3 col-sm-6 mb-4 mb-md-0">
+                <div class="text-center">
+                    <h2 class="count text-white" data-count="3737">0</h2>
+                    <h5 class="text-white">SATISFIED CLIENT</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /funfacts -->
+<!-- success story -->
+<section class="section bg-cover" data-background="@SectionBackground">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-sm-4 position-relative success-video">
+                <a class="play-btn venobox" href="@StoryVideoLink.Url" data-vbtype="video">
+                    <i class="ti-control-play"></i>
+                </a>
+            </div>
+            <div class="col-lg-6 col-sm-8">
+                <div class="bg-white p-5">
+                    <h2 class="section-title">@SectionTitleSuccessStories</h2>
+                    @Html.Raw(SuccessStories)
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /success story -->
+<!-- teachers -->
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h2 class="section-title">@OurTeachersTitle</h2>
+            </div>
+            <!-- teacher -->
+            @for (int i = 0; i < OurTeachers.Length; i++)
+            {
+                <div class="col-lg-4 col-sm-6 mb-5 mb-lg-0">
+                    <div class="card border-0 rounded-0 hover-shadow">
+                        <img class="card-img-top rounded-0" src="@PXH.GetImageURL(OurTeachers[i],"profilePicture")" alt="teacher">
+                        <div class="card-body">
+                            <a href="@OurTeachers[i].Url()">
+                                <h4 class="card-title">@OurTeachers[i].Name</h4>
+                            </a>
+                            <div class="d-flex justify-content-between">
+                                <span>@PXH.GetTextValue(OurTeachers[i], "specialization")</span>
+                                <ul class="list-inline">
+                                    @{
+                                        var TeacherSocialMediaContact = PXH.GetElementsArray(OurTeachers[i], "socialMediaContacts");
+                                    }
+                                    @for (int j = 0; j < TeacherSocialMediaContact.Length; j++)
+                                    {
+                                        var TeacherSocialMediaContactLink = PXH.GetLink(TeacherSocialMediaContact[j], "linkURL");
+                                        <li class="list-inline-item">
+                                            <a class="text-color"
+                                               href="@TeacherSocialMediaContactLink.Url">
+                                                <i class="@TeacherSocialMediaContactLink.Name">
+                                                </i>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+    </div>
+</section>
+<!-- /teachers -->

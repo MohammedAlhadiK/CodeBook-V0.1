@@ -1,0 +1,69 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+@using Umbraco.Web.Models
+@{
+    PropertyExceptionHandler PXH = new PropertyExceptionHandler();
+
+    var CurrentDT = Umbraco.AssignedContentItem;
+    var Slider = PXH.GetElementsArray(CurrentDT, "slider");
+    var SliderBackGround = PXH.GetImageURL(CurrentDT, "sliderBackGround");
+    var title = PXH.GetTextValue(CurrentDT, "sliderBackGround");
+
+
+    var Title = "";
+    var Descreption = "";
+    var ApplyButton = "";
+    Link ApplicationRedirection;
+
+
+}
+<section class="hero-section overlay bg-cover"
+         data-background="@SliderBackGround">
+    <div class="container">
+        <div class="hero-slider">
+            <!-- slider item -->
+            @for (int i = 0; i < Slider.Length; i++)
+            {
+
+                Title = PXH.GetTextValue(Slider[i], "title");
+                Descreption = PXH.GetTextValue(Slider[i], "description").StripHtml();
+                ApplyButton = PXH.GetTextValue(Slider[i], "applyButton");
+                ApplicationRedirection = PXH.GetLink(Slider[i], "applicationRedirection");
+
+
+
+
+                <div class="hero-slider-item">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h1 class="text-white"
+                                data-animation-out="fadeOutRight"
+                                data-delay-out="5"
+                                data-duration-in="3"
+                                data-animation-in="fadeInLeft"
+                                data-delay-in=".1">
+                                @Title
+                            </h1>
+                            <p class="text-muted mb-4"
+                               data-animation-out="fadeOutRight"
+                               data-delay-out="5"
+                               data-duration-in=".3"
+                               data-animation-in="fadeInLeft"
+                               data-delay-in=".4">
+                                @Descreption
+                            </p>
+                            <a href="@ApplicationRedirection"
+                               class="btn btn-primary"
+                               data-animation-out="fadeOutRight"
+                               data-delay-out="5"
+                               data-duration-in=".4"
+                               data-animation-in="fadeInLeft"
+                               data-delay-in=".7">@ApplyButton</a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>

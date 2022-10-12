@@ -1,0 +1,38 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+@{
+    Layout = "_CodeBookGeneralTemplate.cshtml";
+}
+@{
+
+    var CurrentDT = Umbraco.AssignedContentItem;
+    PropertyExceptionHandler PXH = new PropertyExceptionHandler();
+    var CurrentDT_Title = PXH.GetTextValue(CurrentDT, "title");
+    var CurrentDT_ParentTitle = PXH.GetTextValue(CurrentDT.Ancestor(), "title");
+    var Background = PXH.GetImageURL(CurrentDT, "background");
+    var Description = PXH.GetTextValue(CurrentDT, "description").StripHtml();
+
+}
+<!-- page title -->
+<section class="page-title-section overlay" data-background="@Background">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <ul class="list-inline custom-breadcrumb">
+                    <li class="list-inline-item">
+                        <a class="h2 text-primary font-secondary"
+                           href="@CurrentDT.Ancestor().Url()">
+                            @CurrentDT_ParentTitle
+                        </a>
+                    </li>
+                    <li class="list-inline-item text-white h3 font-secondary nasted">@CurrentDT_Title</li>
+                </ul>
+                <p class="text-lighten">@Description</p>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /page title -->
+
+@RenderBody()

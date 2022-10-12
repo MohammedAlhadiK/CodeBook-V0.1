@@ -1,0 +1,62 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<GenericVM<CodeBook.Models.ContactUs>>
+@using CodeBook.Models.ViewModels
+@using CodeBook.Services
+@using CodeBook.Models
+@using CodeBook.Resources
+
+
+@{
+    Html.EnableClientValidation();
+    Html.EnableUnobtrusiveJavaScript();
+    var ModelData = Model.Data;
+
+    LanguageGetter.CurrentLanguage = Model.CurrentLanguage;
+    string reCAPTCHA = Recaptcha.reCaptchaRequired;
+    string OldCaptchResponse = Recaptcha.OldCaptchResponse;
+    string ClickHere = Recaptcha.ClickHere;
+
+    var SendButton = "Send a Message";
+    var ContactUSFromOptions = new FormOptions() { FormID = "ContactUsForm", ErrorMessageColor = "ffbc3b", LoaderColors = new string[] { "ffbc3b", "1a1a37" } };
+
+}
+
+@using (Ajax.BeginForm("SendContactUsForm", "ContactUS", null, new AjaxOptions()
+{
+
+    UpdateTargetId = $"preloader-container{ContactUSFromOptions.FormID}",
+    HttpMethod = "POST",
+    InsertionMode = InsertionMode.Replace,
+
+
+}, new { id = $"{ContactUSFromOptions.FormID}", enctype = "multipart/form-data" }))
+
+{
+
+    @Html.EditorFor(model => model.Data.Name, new { htmlAttributes = new { @class = "form-control mb-3", placeholder = Html.DisplayNameFor(m => m.Data.Name) } })
+    @Html.ValidationMessageFor(model => Model.Data.Name, "", new { @class = $"errorMessageTextColor{ContactUSFromOptions.FormID} mb-3" })
+
+    @Html.EditorFor(model => model.Data.Email, new { htmlAttributes = new { @class = "form-control mb-3", placeholder = Html.DisplayNameFor(m => m.Data.Email) } })
+    @Html.ValidationMessageFor(model => model.Data.Email, "", new { @class = $"errorMessageTextColor{ContactUSFromOptions.FormID} mb-3" })
+
+    @Html.EditorFor(model => model.Data.Subject, new { htmlAttributes = new { @class = "form-control mb-3", placeholder = Html.DisplayNameFor(m => m.Data.Subject) } })
+    @Html.ValidationMessageFor(model => Model.Data.Subject, "", new { @class = $"errorMessageTextColor{ContactUSFromOptions.FormID} mb-3" })
+
+    @Html.TextAreaFor(model => model.Data.Message, new { @class = "form-control mb-3", rows = "5", placeholder = Html.DisplayNameFor(m => m.Data.Message) })
+    @Html.ValidationMessageFor(model => model.Data.Message, "", new { @class = $"errorMessageTextColor{ContactUSFromOptions.FormID} mb-3" })
+
+
+
+    <div class="mb-3">
+        @Html.Partial("~/Views/Components/Recaptcha/_Recaptcha.cshtml", ContactUSFromOptions)
+        <input type="hidden" name="CurrentLanguage" value="@Model.CurrentLanguage" />
+        <input type="hidden" name="ParentID" value="@Model.ParentID" />
+        @Html.Partial("~/Views/Components/FormLoader/_FormLoader.cshtml", ContactUSFromOptions)
+
+    </div>
+
+    <button type="submit" value="send" class="btn btn-primary">@SendButton</button>
+}
+
+
+
+

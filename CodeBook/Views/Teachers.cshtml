@@ -1,0 +1,85 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Services
+@{
+    Layout = "_CodeBookInnerTemplate.cshtml";
+    var OurTeachersPage = Umbraco.AssignedContentItem;
+    var PXH = new PropertyExceptionHandler();
+    var OurTeachers = OurTeachersPage.ChildrenOfType("teacher").ToArray();
+    var OurTeachersCategories = OurTeachersPage.Value<IEnumerable<string>>("categories").Reverse().ToArray();
+    var AllCategories = OurTeachersPage.Value<IEnumerable<string>>("categories").Reverse().ToArray();
+
+}
+
+<!-- teachers -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- teacher category list -->
+                <ul class="list-inline text-center filter-controls mb-5">
+                    <li class="list-inline-item m-3 text-uppercase active" data-filter="all">All</li>
+
+                    @for (int i = 0; i < OurTeachersCategories.Length; i++)
+                    {
+                        <li class="list-inline-item m-3 text-uppercase " data-filter="@OurTeachersCategories[i]">@OurTeachersCategories[i]</li>
+                    }
+
+
+                </ul>
+            </div>
+        </div>
+        <!-- teacher list -->
+        <div class="row filtr-container">
+            @for (int i = 0; i < OurTeachers.Length; i++)
+            {
+                var TeachCategories = OurTeachers[i].Value<IEnumerable<string>>("categories").ToArray();
+
+                <div data-category="@ExtractCategories(TeachCategories)" class="col-lg-4 col-sm-6 mb-5 filtr-item">
+                    <div class="card border-0 rounded-0 hover-shadow">
+                        <img class="card-img-top rounded-0" src="@PXH.GetImageURL(OurTeachers[i],"profilePicture")" alt="teacher">
+                        <div class="card-body">
+                            <a href="@OurTeachers[i].Url()">
+                                <h4 class="card-title">@OurTeachers[i].Name</h4>
+                            </a>
+                            <p>Teacher</p>
+                            <ul class="list-inline">
+                                @{
+
+                                    var SocialMedia = PXH.GetElementsArray(OurTeachers[i], "socialMediaContacts").ToArray();
+                                }
+                                @for (int j = 0; j < SocialMedia.Length; j++)
+                                {
+                                    var SocialMediaLink = PXH.GetLink(SocialMedia[j], "linkURL");
+                                    <li class="list-inline-item">
+                                        <a class="text-color"
+                                           href="@SocialMediaLink.Url"
+                                           target="@SocialMediaLink.Target">
+                                            <i class="@SocialMediaLink.Name">
+                                            </i>
+                                        </a>
+                                    </li>
+
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>
+<!-- /teachers -->
+@functions{
+
+    public string ExtractCategories(string[] Categories)
+    {
+        var ExtractedCategories = "";
+        for (int i = 0; i < Categories.Length; i++)
+        {
+            ExtractedCategories += Categories[i] + " , ";
+        }
+        return ExtractedCategories;
+    }
+
+}

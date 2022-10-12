@@ -1,0 +1,127 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using CodeBook.Models
+@using CodeBook.Models.ViewModels
+@using CodeBook.Services
+@using Umbraco.Web.Models
+@{
+    var Root = Model.Root();
+
+    PropertyExceptionHandler PXH = new PropertyExceptionHandler();
+    var LogoURL = PXH.GetImageURL(Root, "mainLogo");
+    var Address = PXH.GetTextValue(Root, "address");
+    var Phone1 = PXH.GetTextValue(Root, "phone1");
+    var Phone2 = PXH.GetTextValue(Root, "phone2");
+    var Email = PXH.GetTextValue(Root, "email");
+
+    var FooterMenus = PXH.GetElementsArray(Root, "footerMenu");
+
+    var SocialMedia = PXH.GetElementsArray(Root, "socialMedia");
+
+    var SubscribeNow = PXH.GetTextValue(Root, "subscribeNow");
+    var Join = PXH.GetTextValue(Root, "join");
+    var EnterEmail = PXH.GetTextValue(Root, "enterEmail");
+
+    var CurrentDT = Umbraco.AssignedContentItem;
+    var NewsletterID = Root.ChildrenOfType("newsLetter").FirstOrDefault().Key.ToString();
+    var NewsLetterFormModel = new GenericVM<NewsLetterForm>() { CurrentLanguage = CurrentDT.GetCultureFromDomains(), ParentID = NewsletterID };
+
+}
+<footer>
+    <!-- newsletter -->
+    <div class="newsletter">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 ml-auto bg-primary py-5 newsletter-block">
+                    <h3 class="text-white">@SubscribeNow</h3>
+                    @*@Html.Partial("~/Views/Partials/Shared/_NewsLetterForm.cshtml", NewsLetterFormModel)*@
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- footer content -->
+    <div class="footer bg-footer section border-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-sm-8 mb-5 mb-lg-0">
+                    <!-- logo -->
+                    <a class="logo-footer" href="@Root.Url()"><img class="img-fluid mb-4" src="@LogoURL" alt="logo"></a>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">@Address</li>
+                        <li class="mb-2">@Phone1</li>
+                        <li class="mb-2">@Phone2</li>
+                        <li class="mb-2">@Email</li>
+                    </ul>
+                </div>
+                <!-- company -->
+                @{
+                    var MenuName = "";
+                    Link[] MenuLinks = { };
+
+                }
+
+                @for (int i = 0; i < FooterMenus.Length; i++)
+                {
+                    MenuName = PXH.GetTextValue(FooterMenus[i], "menuTitle");
+                    MenuLinks = PXH.GetLinkArray(FooterMenus[i], "menuItems");
+                    <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-5 mb-md-0">
+                        <h4 class="text-white mb-5">@MenuName</h4>
+                        <ul class="list-unstyled">
+
+                            @for (int j = 0; j < MenuLinks.Length; j++)
+                            {
+                                <li class="mb-3">
+                                    <a class="text-color"
+                                       href="@MenuLinks[j].Url"
+                                       target="@MenuLinks[j].Target">
+                                        @MenuLinks[j].Name
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+    <!-- copyright -->
+    <div class="copyright py-4 bg-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-7 text-sm-left text-center">
+                    <p class="mb-0">
+                        Copyright
+                        @DateTime.Now.Year
+                        © themefisher
+
+                    </p>
+                    Developed By <a href="https://www.linkedin.com/in/mohammed-alhadik/" target="_blank" class="text-color">Mohammed Alhadik</a>
+                </div>
+                <div class="col-sm-5 text-sm-right text-center">
+                    <ul class="list-inline">
+                        @{
+                            Link SocialMediaMenuItemCurrentLink = new Link();
+                            var Icon = "";
+                        }
+                        @for (int i = 0; i < SocialMedia.Length; i++)
+                        {
+                            SocialMediaMenuItemCurrentLink = PXH.GetLink(SocialMedia[i], "linkUrl");
+                            Icon = PXH.GetTextValue(SocialMedia[i], "itemIcon");
+
+                            <li class="list-inline-item">
+                                <a class="d-inline-block p-2"
+                                   target="@SocialMediaMenuItemCurrentLink.Target"
+                                   href="@SocialMediaMenuItemCurrentLink.Url">
+                                    <i class="@Icon text-primary"></i>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+

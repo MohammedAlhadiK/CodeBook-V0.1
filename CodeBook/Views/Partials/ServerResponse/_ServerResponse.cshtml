@@ -1,0 +1,99 @@
+﻿@*@inherits Umbraco.Web.Mvc.UmbracoViewPage<GenericVM<ResponseVM>>*@
+@model CodeBook.Models.ResponseVM
+@using CodeBook.Models.Enums
+
+@{
+    var Messages = Model.Messages;
+    var CurrentLangauge = Model.CurrentLanguage;
+    var Response = Model.Status;
+    var Style = "";
+    var Icon = "";
+
+
+    // Responded Good
+    if (Response == Status.OK)
+    {
+        Icon = "<i class='lni lni-checkmark-circle'></i>";
+        Style = "success";
+    }
+    // Responded Warning
+    else if (Response == Status.Warning)
+    {
+        Icon = "<i class='lni lni-warning'></i>";
+        Style = "warning";
+    }
+    // Responded Error
+    else
+    {
+        Icon = "<i class='lni lni-cross-circle'></i>";
+        Style = "danger";
+    }
+
+
+
+
+    <div id="serverResponse" class="col-12">
+        <div class="alert alert-@Style row alert-dismissible fade show">
+            <div class="col-1">
+                @Html.Raw(Icon)
+            </div>
+            <div class="col-11">
+
+                @foreach (var item in Messages)
+                {
+                    <span>@item</span><br />
+                }
+            </div>
+            <div>
+
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+}
+
+@*@if (Response == Status.OK)
+    {
+        <script>
+            //Deleting Values after Submition
+            try {
+                $("#ContactUsForm :input[type=text]").val("");
+                $("textarea").val("");
+                expire_Captcha();
+
+            } catch (e) {
+
+            }
+
+            //if (response > 0) {
+            //    $("#SubscriberEmail").val("");
+            //    expireCaptcha();
+            //}
+
+            setTimeout(function () {
+                $("#serverResponse").fadeOut(1000, 'swing');
+            }, 2500);
+        </script>
+    }*@
+
+
+@functions{
+    /// <summary>
+    ///This Function take two string and swap them
+    /// </summary>
+    /// <param name="x">The First Parameter ==> will be in the end </param>
+    /// <param name="y">The Second Parameter ==> will be in the begining</param>
+    /// <returns></returns>
+    public string PrependCustomeString(string x, string y)
+    {
+
+        return y + " " + x;
+    }
+
+}

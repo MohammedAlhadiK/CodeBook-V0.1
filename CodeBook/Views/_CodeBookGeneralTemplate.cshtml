@@ -1,0 +1,91 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{ 
+    var Root = Model.Root();
+
+
+
+
+}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="utf-8">
+    <title>Educenter</title>
+
+    <!-- mobile responsive meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+    <meta property="og:title" content="Site Title" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://my.website.com" />
+    <meta property="og:image:url" content="http://my.website.com/images/thumb.png" />
+    <meta property="og:description" content="Site description" />
+
+
+    <!-- ** Plugins Needed for the Project ** -->
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="~/assets/plugins/bootstrap/bootstrap.min.css">
+    <!-- slick slider -->
+    <link rel="stylesheet" href="~/assets/plugins/slick/slick.css">
+    <!-- themefy-icon -->
+    <link rel="stylesheet" href="~/assets/plugins/themify-icons/themify-icons.css">
+    <!-- animation css -->
+    <link rel="stylesheet" href="~/assets/plugins/animate/animate.css">
+    <!-- aos -->
+    <link rel="stylesheet" href="~/assets/plugins/aos/aos.css">
+    <!-- venobox popup -->
+    <link rel="stylesheet" href="~/assets/plugins/venobox/venobox.css">
+
+    <!-- Main Stylesheet -->
+    <link href="https://cdn.lineicons.com/3.0/lineicons.css" rel="stylesheet">
+    <link href="~/assets/css/style.css" rel="stylesheet">
+    <!--Favicon-->
+    <link rel="shortcut icon" href="~/assets/images/favicon.png" type="image/x-icon">
+    <link rel="icon" href="~/assets/images/favicon.png" type="image/x-icon">
+
+</head>
+
+<body>
+
+    <!-- preloader start -->
+    @Html.Partial("Partials/Shared/_PreLoader")
+    <!-- preloader end -->
+    <!-- header -->
+    @Html.Partial("Partials/Shared/_Header")
+    <!-- /header -->
+    @*=- Page Body -=*@
+    @RenderBody()
+
+
+    <!-- footer -->
+    @*@Html.Partial("Partials/Shared/_Footer")*@
+    <!-- /footer -->
+    <!-- jQuery -->
+    <script src="~/assets/plugins/jQuery/jquery.min.js"></script>
+
+
+    <script src="~/Scripts/jquery.validate-vsdoc.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>    <!-- Bootstrap JS -->
+    <script src="~/assets/plugins/bootstrap/bootstrap.min.js"></script>
+    <!-- slick slider -->
+    <script src="~/assets/plugins/slick/slick.min.js"></script>
+    <!-- aos -->
+    <script src="~/assets/plugins/aos/aos.js"></script>
+    <!-- venobox popup -->
+    <script src="~/assets/plugins/venobox/venobox.min.js"></script>
+    <!-- filter -->
+    <script src="~/assets/plugins/filterizr/jquery.filterizr.min.js"></script>
+    <!-- google map -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBu5nZKbeK-WHQ70oqOWo-_4VmwOwKP9YQ"></script>
+    <script src="~/assets/plugins/google-map/gmap.js"></script>
+
+    <!-- Main Script -->
+    <script src="~/assets/js/script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<GenericVM<NewsLetterForm>>
+
+
+@using CodeBook.Services
+@using CodeBook.Models.ViewModels
+@using CodeBook.testmodel
+@using CodeBook.Models
+
+
+@{
+    Html.EnableClientValidation();
+    Html.EnableUnobtrusiveJavaScript();
+    var ModelData = Model.Data;
+    var Join = "join";
+    LanguageGetter.CurrentLanguage = Model.CurrentLanguage;
+    var NewsLetterFromOptions = new FormOptions() { FormID = "NewsletterForm", ErrorMessageColor = "fff", LoaderColors = new string[] { "fff", "1a1a37" } };
+
+}
+
+@using (Ajax.BeginForm("SendSubscriptionForm", "Newsletter", null, new AjaxOptions()
+{
+
+    UpdateTargetId = $"preloader-container{NewsLetterFromOptions.FormID}",
+    HttpMethod = "POST",
+    InsertionMode = InsertionMode.Replace,
+
+
+}, new { id = $"{NewsLetterFromOptions.FormID}", enctype = "multipart/form-data" }))
+
+{
+    <div class="input-wrapper">
+        @Html.EditorFor(model => model.Data.Email, new { htmlAttributes = new { @class = "form-control border-0", placeholder = Html.DisplayNameFor(m => m.Data.Email) } })
+        @Html.ValidationMessageFor(model => Model.Data.Email, "", new { @class = $"errorMessageTextColor{NewsLetterFromOptions.FormID} mb-3" })
+
+        <button type="submit" value="send" class="btn btn-primary">@Join</button>
+
+    </div>
+
+    <div class="mb-3" style="float: inline-start; margin-top: 1%; ">
+        @*@Html.Partial("~/Views/Components/Recaptcha/_Recaptcha.cshtml", NewsLetterFromOptions)*@
+        @Html.Partial("~/Views/Components/Recaptcha/_Recaptcha.cshtml", new testmodel())
+        <input type="hidden" name="CurrentLanguage" value="@Model.CurrentLanguage" />
+        <input type="hidden" name="ParentID" value="@Model.ParentID" />
+    </div>
+    <div class="mb-3" style="float: inline-start; margin-top: 3%; margin-inline-start: 1%">
+        @*@Html.Partial("~/Views/Components/FormLoader/_FormLoader.cshtml", NewsLetterFromOptions)*@
+    </div>
+}

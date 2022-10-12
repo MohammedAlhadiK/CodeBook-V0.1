@@ -1,0 +1,104 @@
+﻿@model CodeBook.Models.FormOptions
+@using CodeBook.Resources
+@{
+    string reCAPTCHA = Recaptcha.reCaptchaRequired;
+    string ClickHere = Recaptcha.ClickHere;
+    string FormID = Model.FormID;
+    string AjaxFormID = $"#{FormID}";
+    string ErrorMessageColor = Model.ErrorMessageColor;
+    string SiteKey = Model.SiteKey;
+    string ThemeMode = Model.ThemeMode == "" ? "light" : Model.ThemeMode;
+
+}
+
+<style>
+    .errorMessageTextColor@(FormID) {
+        color: #@(ErrorMessageColor) !important;
+    }
+</style>
+
+
+
+<div id="reCaptchaContainer@(FormID)"></div>
+
+<div id="reCaptchamessageContainer">
+    <input type="hidden" name="ISValidCaptcha" id="ISValidCaptcha@(FormID)" value="" />
+    <input type="hidden" name="reCaptchaValidationMessage" id="reCaptchaValidationMessage@(FormID)" value="" />
+
+
+</div>
+
+@* <!--====== reCaptch Script ======--> *@
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback@(FormID)&render=explicit"
+        async defer>
+</script>
+
+@* <!--====== jQuery ======--> *@
+<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+
+<script>
+    var widgetId@(FormID);
+    var onloadCallback@(FormID) = function () {
+        widgetId@(FormID) = grecaptcha.render('reCaptchaContainer@(FormID)', {
+            'sitekey': '@SiteKey',
+            'theme': '@ThemeMode',
+            'callback': verifyCaptcha@(FormID),
+            'error-callback': resetCaptcha@(FormID),
+            'expired-callback': resetCaptcha@(FormID),
+        });
+    };
+
+    @*var language = "@Model";
+    //$(document).ready(function () {
+    //    if (language === "ar-EG") {
+    //    $("@AjaxFormID :input[type=text]").attr("data-val-regex-pattern", "^[\u06@(FormID)1-\u064A ]+$");
+    //    }
+    //});*@
+
+    var form = $("@AjaxFormID");
+    var isFormValid = false;
+    function CheckFormValidity() {
+        if ($("@AjaxFormID .form-control").val() === "" || $("@AjaxFormID .form-control").hasClass("input-validation-error") ) {
+            isFormValid = false;
+        }
+        else {
+             isFormValid = true;
+        }
+    }
+
+    $("@AjaxFormID").submit(() => {
+        CheckFormValidity();
+        var CurrentWidget = widgetId@(FormID);
+        if (grecaptcha.getResponse(CurrentWidget) == "")
+        {
+             $("#reCaptchaValidationMessage@(FormID)")
+                 .replaceWith('<div id="reCaptchaValidationMessage@(FormID)"><span class="errorMessageTextColor@(FormID)">@(reCAPTCHA)</span></div>');
+             $("#ISValidCaptcha@(FormID)").val("");
+            return false;
+        }
+
+        //responded
+        else {
+             if (isFormValid == true)
+             {
+                 $("#preloader-container@(FormID)")
+                        .replaceWith('<div id="preloader-container@(FormID)"><span id="loader@(FormID)"class="loader" style="display:block"></span></div>');
+                 $("#reCaptchaValidationMessage@(FormID)").replaceWith('<div id="reCaptchaValidationMessage@(FormID)"><span class="errorMessageTextColor@(FormID)"></span></div>');
+                 setTimeout(function () { resetCaptcha@(FormID)() }, 1500);
+                }
+              }
+            });
+
+//Call back Function called if the captcha is valid
+    function verifyCaptcha@(FormID)() {
+    $("#ISValidCaptcha@(FormID)").val("valid");
+    $("#reCaptchaValidationMessage@(FormID)").fadeOut(1000, 'swing');
+    }
+//Call back Function called if the captcha is expired
+    function resetCaptcha@(FormID)() {
+    $("#ISValidCaptcha@(FormID)").val("");
+    grecaptcha.reset(widgetId@(FormID));
+    $("#reCaptchaValidationMessage@(FormID)").replaceWith('<div id="reCaptchaValidationMessage@(FormID)"><span class="errorMessageTextColor@(FormID)"></span></div>');
+    }
+
+</script>
